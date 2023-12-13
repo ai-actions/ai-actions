@@ -7,38 +7,14 @@
   },
   "servers": [
     {
-      "url": "https://actions.zapier.com"
+      "url": "https://ai-actions.github.io"
     }
   ],
   "paths": {
-    "/gpt/api/v1/available/": {
+    "/api/gpts/v1/available.json": {
       "get": {
         "operationId": "list_available_actions",
         "summary": "List Available Actions",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "apps",
-            "schema": {
-              "title": "Apps",
-              "description": "Filter actions to a comma separated list of Zapier app names.",
-              "type": "string"
-            },
-            "required": false,
-            "description": "Filter actions to a comma separated list of Zapier app names."
-          },
-          {
-            "in": "query",
-            "name": "exact_search",
-            "schema": {
-              "title": "Exact Search",
-              "description": "Filter actions to exact search string of the description (case insensitive).",
-              "type": "string"
-            },
-            "required": false,
-            "description": "Filter actions to exact search string of the description (case insensitive)."
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -51,70 +27,7 @@
             }
           }
         },
-        "description": "List all the currently available actions for the user. If you try to run an action and receive an error\n that it does not exist, try refreshing this list first.",
-        "security": [
-          {
-            "AccessPointOAuth": []
-          }
-        ]
-      }
-    },
-    "/gpt/api/v1/available/{available_action_id}/run/": {
-      "post": {
-        "operationId": "run_action",
-        "summary": "Run Action",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "available_action_id",
-            "schema": {
-              "title": "Available Action Id",
-              "type": "string",
-              "pattern": "^[A-Z0-9]{26}$",
-              "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
-            },
-            "required": true,
-            "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RunResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "description": "Run an available action using plain english instructions. You may also include associated params from list_available_actions in the body of the request.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RunRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "security": [
-          {
-            "AccessPointOAuth": []
-          }
-        ]
+        "description": "List all the currently available actions for the user. If you try to run an action and receive an error\n that it does not exist, try refreshing this list first."
       }
     }
   },
@@ -129,20 +42,10 @@
             "description": "The unique ID of the available action.",
             "type": "string"
           },
-          "operation_id": {
-            "title": "Operation Id",
-            "description": "The operation ID of the available action.",
-            "type": "string"
-          },
           "description": {
             "title": "Description",
             "description": "Description of the action.",
             "type": "string"
-          },
-          "params": {
-            "title": "Params",
-            "description": "Available hint fields for the action.",
-            "type": "object"
           }
         },
         "required": [
@@ -162,16 +65,10 @@
             "items": {
               "$ref": "#/components/schemas/AvailableActionSchema"
             }
-          },
-          "configuration_link": {
-            "title": "Configuration Link",
-            "description": "Guide the user to setup new actions with the configuration_link. You can optionally add ?setup_action=... onto configuration_link to set up a specific Zapier app and action For example: https://actions.zapier.com/gpt/start?setup_action=gmail find email",
-            "type": "string"
           }
         },
         "required": [
-          "results",
-          "configuration_link"
+          "results"
         ]
       },
       "RunResponse": {
@@ -291,20 +188,6 @@
         "required": [
           "instructions"
         ]
-      }
-    },
-    "securitySchemes": {
-      "AccessPointOAuth": {
-        "type": "oauth2",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "/oauth/authorize/",
-            "tokenUrl": "/oauth/token/",
-            "scopes": {
-              "nla:exposed_actions:execute": "Run AI Actions"
-            }
-          }
-        }
       }
     }
   }
